@@ -32,7 +32,23 @@ func (d *Day04) executePart1() string{
 	return fmt.Sprintf("Elves couple doing the same sections are %d", sameSections)
 }
 func (d *Day04) executePart2() string{
-	return "Not implemented"
+	lines, err := common.ReadAllLines(d.inputPath)
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
+	sameSections := 0
+	for i, line := range(lines){
+		firstElfFirstSection, firstElfSecondSection, secondElfFirstSection, secondElfSecondSection, err := decodeElvesSections(line, i)
+		if err != nil{
+			return err.Error()
+		}
+		if (firstElfFirstSection >= secondElfFirstSection && firstElfFirstSection <= secondElfSecondSection) ||
+		   (secondElfFirstSection >= firstElfFirstSection && secondElfFirstSection <= firstElfSecondSection) {
+			sameSections += 1
+		}
+
+	}
+	return fmt.Sprintf("Elves couple doing the same sections are %d", sameSections)
 
 }
 
