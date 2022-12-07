@@ -21,6 +21,8 @@ type RockPaperScissorChoice struct {
 	Score int
 	inputFirstPlayer string
 	inputSecondPlayer string
+	winsAgainst RockPaperScissor
+	loosesAgainst RockPaperScissor
 }
 
 type RockPaperScissorReader struct {
@@ -61,6 +63,8 @@ func GetRock() RockPaperScissorChoice {
 		Score: 1, 
 		inputFirstPlayer: "A",
 		inputSecondPlayer: "X",
+		winsAgainst: Scissor,
+		loosesAgainst: Paper,
 	}
 }
 func GetPaper() RockPaperScissorChoice {
@@ -69,6 +73,8 @@ func GetPaper() RockPaperScissorChoice {
 		Score: 2,
 		inputFirstPlayer: "B",
 		inputSecondPlayer: "Y",
+		winsAgainst: Rock,
+		loosesAgainst: Scissor,
 	}
 }
 func GetScissor() RockPaperScissorChoice {
@@ -77,20 +83,18 @@ func GetScissor() RockPaperScissorChoice {
 		Score: 3,
 		inputFirstPlayer: "C",
 		inputSecondPlayer: "Z",
+		winsAgainst: Paper,
+		loosesAgainst: Rock,
 	}
 }
 
 // this method will return 0 if second player (me) looses, 3 if tie, 6 if second player (me) wins
 func BattleScore(firstPlayer RockPaperScissorChoice, me RockPaperScissorChoice) int {
 	ret := 0
-	if firstPlayer.Score == me.Score{
+	if firstPlayer.choice == me.choice{
 		ret = 3
-	} else if me.Score == 1 && firstPlayer.Score == 3{
+	} else if me.winsAgainst == firstPlayer.choice{
 		ret = 6
-	} else if me.Score == 3 && firstPlayer.Score == 2{
-		ret = 6
-	} else if me.Score == 2 && firstPlayer.Score == 1 { 
-		ret = 6
-	}
+	} 
 	return ret
 }
