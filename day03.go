@@ -59,5 +59,34 @@ func GetPriority(c rune) (int, error) {
 }
 
 func (d *Day03) executePart2() string{
-	return "Not implemented"
+	lines, err := common.ReadAllLines(d.inputPath)
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
+	priorityScore := 0
+	var groupItems [][52]bool
+	for i, line := range(lines){
+		var items [52]bool
+
+		for _, char := range(line){
+			priority, err := GetPriority(char)
+			if err != nil {
+				return fmt.Sprintf("Unable to decode character at line %d", i)
+			}
+			items[priority-1] = true
+		}
+		groupItems = append(groupItems, items)
+		if i % 3 == 2 {
+			for i, _ := range(items){
+				if groupItems[0][i] && groupItems[1][i] && groupItems[2][i]{
+					//priority starts from 1, arrays start from 0
+					priorityScore += i+1
+					break
+				}
+			}
+			groupItems = [][52]bool{}
+		}
+
+	}
+	return fmt.Sprintf("Priority score is %d", priorityScore)
 }
