@@ -59,6 +59,24 @@ func moveStacks(stacks []string, instruction string) ([]string, error) {
 	}
 	return stacks, nil
 }
+func moveStacksV2(stacks []string, instruction string) ([]string, error) {
+	//move 3 from 9 to 7
+	if len(instruction) < 1 {
+		return nil, errors.New("instruction is too short")
+	}
+	if len(stacks) < 1{
+		return nil, errors.New("there should be at least one stack")
+	}
+	var quantity, origin, destination int
+	fmt.Sscanf(instruction, "move %d from %d to %d", &quantity, &origin, &destination)
+	//arrays are 0 based
+	origin -= 1
+	destination -= 1
+	crates := string(stacks[origin][len(stacks[origin])-quantity:])
+	stacks[origin] = stacks[origin][:len(stacks[origin])-quantity]
+	stacks[destination] = stacks[destination] + crates
+	return stacks, nil
+}
 
 func getDividerIndex(lines []string) (int, error) {
 	indexDivider := 0
@@ -106,5 +124,29 @@ func getStacks(lines []string) ([]string, error){
 
 
 func (d *Day05) executePart2() string{
-	return "Not implemented"
+	lines, err := common.ReadAllLines(d.inputPath)
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
+	indexDivider, err := getDividerIndex(lines)
+
+	if err != nil {
+		return err.Error()
+	}
+	//there is an additional line with stacks indexes, ignore it
+	stacks, err := getStacks(lines[:indexDivider-1])
+	if err != nil {
+		return err.Error()
+	}
+	for i, line := range(lines[indexDivider+1:]){
+		stacks, err = moveStacksV2(stacks, line)
+		if err != nil {
+			return fmt.Sprintf("Error while reading line %d\n%v", i, err)
+		}
+	}
+	message := ""
+	for _, stack := range(stacks){
+		message += string(stack[len(stack)-1])
+	}
+	return fmt.Sprintf("Message is %s", message)
 }
