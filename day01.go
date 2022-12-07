@@ -1,11 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
+	"github.com/manto89/aoc2022/common"
 )
 
 type Day01 struct {
@@ -14,17 +13,14 @@ type Day01 struct {
 
 func (d *Day01) executePart1() string {
 
-	f, err := os.OpenFile(d.inputPath, os.O_RDONLY, os.ModePerm)
-    if err != nil {
-        return fmt.Sprintf("open file error: %v", err)
-    }
-    defer f.Close()
+	lines, err := common.ReadAllLines(d.inputPath)
 
-    sc := bufio.NewScanner(f)
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
 	var caloriesList []int
 	calories := 0
-    for sc.Scan() {
-        line := sc.Text()  // GET the line string
+    for _, line := range(lines){
 		if len(line) < 1 {
 			caloriesList = append(caloriesList, calories)
 			calories = 0
@@ -34,9 +30,6 @@ func (d *Day01) executePart1() string {
 			continue
 		}
 		calories += newCalories
-    }
-    if err := sc.Err(); err != nil {
-        return fmt.Sprintf("scan file error: %v", err)
     }
 	sort.Ints(caloriesList)
 	return strconv.Itoa(caloriesList[len(caloriesList)-1])

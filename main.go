@@ -31,5 +31,9 @@ func main() {
 		print(fmt.Sprintf("day %d not found", dayNum))
 		return
 	}
-	print(dayToExecute.executePart1())
+	println(fmt.Sprintf("Executing day %d ", dayNum))
+	println("Part 1:")
+	println(dayToExecute.executePart1())
+	println("Part 2:")
+	println(dayToExecute.executePart2())
 }
