@@ -30,6 +30,7 @@ func main() {
 		4: &Day04{inputPath: "inputs/day04.txt"},
 		5: &Day05{inputPath: "inputs/day05.txt"},
 		6: &Day06{inputPath: "inputs/day06.txt"},
+		7: &Day07{inputPath: "inputs/day07.txt"},
 	}	
 	dayToExecute, ok := days[dayNum]
 	if !ok {
