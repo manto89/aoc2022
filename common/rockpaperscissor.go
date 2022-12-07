@@ -17,12 +17,12 @@ func (d RockPaperScissor) String() string {
 }
 
 type RockPaperScissorChoice struct {
-	choice RockPaperScissor
+	Choice RockPaperScissor
 	Score int
 	inputFirstPlayer string
 	inputSecondPlayer string
-	winsAgainst RockPaperScissor
-	loosesAgainst RockPaperScissor
+	WinsAgainst RockPaperScissor
+	LoosesAgainst RockPaperScissor
 }
 
 type RockPaperScissorReader struct {
@@ -56,44 +56,53 @@ func MakeReader() *RockPaperScissorReader{
 	}
 	return &ret
 }
+func GetFromEnum(enum RockPaperScissor) RockPaperScissorChoice{
+	if enum == Rock{
+		return GetRock()
+	} else if enum == Paper{
+		return GetPaper()
+	} else{
+		return GetScissor()
+	}
+}
 
 func GetRock() RockPaperScissorChoice {
 	return RockPaperScissorChoice{
-		choice: Rock, 
+		Choice: Rock, 
 		Score: 1, 
 		inputFirstPlayer: "A",
 		inputSecondPlayer: "X",
-		winsAgainst: Scissor,
-		loosesAgainst: Paper,
+		WinsAgainst: Scissor,
+		LoosesAgainst: Paper,
 	}
 }
 func GetPaper() RockPaperScissorChoice {
 	return RockPaperScissorChoice{
-		choice: Paper,
+		Choice: Paper,
 		Score: 2,
 		inputFirstPlayer: "B",
 		inputSecondPlayer: "Y",
-		winsAgainst: Rock,
-		loosesAgainst: Scissor,
+		WinsAgainst: Rock,
+		LoosesAgainst: Scissor,
 	}
 }
 func GetScissor() RockPaperScissorChoice {
 	return RockPaperScissorChoice{
-		choice: Scissor,
+		Choice: Scissor,
 		Score: 3,
 		inputFirstPlayer: "C",
 		inputSecondPlayer: "Z",
-		winsAgainst: Paper,
-		loosesAgainst: Rock,
+		WinsAgainst: Paper,
+		LoosesAgainst: Rock,
 	}
 }
 
 // this method will return 0 if second player (me) looses, 3 if tie, 6 if second player (me) wins
 func BattleScore(firstPlayer RockPaperScissorChoice, me RockPaperScissorChoice) int {
 	ret := 0
-	if firstPlayer.choice == me.choice{
+	if firstPlayer.Choice == me.Choice{
 		ret = 3
-	} else if me.winsAgainst == firstPlayer.choice{
+	} else if me.WinsAgainst == firstPlayer.Choice{
 		ret = 6
 	} 
 	return ret
