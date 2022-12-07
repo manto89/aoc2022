@@ -24,7 +24,7 @@ func main() {
 	}
 
 	days := map[int]IDay{
-		1: &Day01{inputPath: "day01/input.txt"},
+		1: &Day01{inputPath: "inputs/day01.txt"},
 	}	
 	dayToExecute, ok := days[dayNum]
 	if !ok {
