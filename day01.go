@@ -11,6 +11,23 @@ type Day01 struct {
 	inputPath string
 }
 
+func convertToIntAndSumBetweenEmptyLines(strings []string) ([]int, error){
+	var ret []int
+	sum := 0
+	for _, s := range(strings){
+		if len(s) < 1 {
+			ret = append(ret, sum)
+			sum = 0
+		}
+		i, err := strconv.Atoi(s)
+		if (err != nil){
+			return nil, err
+		}
+		sum += i
+	}
+	return ret, nil
+}
+
 func (d *Day01) executePart1() string {
 
 	lines, err := common.ReadAllLines(d.inputPath)
@@ -18,21 +35,15 @@ func (d *Day01) executePart1() string {
 	if err != nil {
         return fmt.Sprintf("open file error: %v", err)
 	}
-	var caloriesList []int
-	calories := 0
-    for _, line := range(lines){
-		if len(line) < 1 {
-			caloriesList = append(caloriesList, calories)
-			calories = 0
-		}
-		newCalories, err := strconv.Atoi(line)
-		if err != nil {
-			continue
-		}
-		calories += newCalories
-    }
-	sort.Ints(caloriesList)
-	return strconv.Itoa(caloriesList[len(caloriesList)-1])
+
+	ints, err := convertToIntAndSumBetweenEmptyLines(lines)
+
+	if err != nil {
+		return fmt.Sprintf("Unable to parse strings to ints %w", err)
+	}
+
+	sort.Ints(ints)
+	return strconv.Itoa(ints[len(ints)-1])
 
 }
 
