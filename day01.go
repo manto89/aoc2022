@@ -18,6 +18,7 @@ func convertToIntAndSumBetweenEmptyLines(strings []string) ([]int, error){
 		if len(s) < 1 {
 			ret = append(ret, sum)
 			sum = 0
+			continue;
 		}
 		i, err := strconv.Atoi(s)
 		if (err != nil){
@@ -48,5 +49,25 @@ func (d *Day01) executePart1() string {
 }
 
 func (d *Day01) executePart2() string {
-	return "Not implemented"
+
+	lines, err := common.ReadAllLines(d.inputPath)
+
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
+
+	ints, err := convertToIntAndSumBetweenEmptyLines(lines)
+
+	if err != nil {
+		return fmt.Sprintf("Unable to parse strings to ints %w", err)
+	}
+
+	sort.Ints(ints)
+	sum := 0
+	for _,i := range(ints[len(ints)-3:]){
+		sum += i
+	}
+	
+	return strconv.Itoa(sum)
+
 }
