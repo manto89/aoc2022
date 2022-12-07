@@ -45,5 +45,19 @@ func allCharactersAreDifferent(marker string) bool{
 	return ret
 }
 func (d *Day06) executePart2() string {
-	return "Not implemented"
+	lines, err := common.ReadAllLines(d.inputPath)
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
+	line := lines[0]
+	marker := line[:14]
+	markerIndex := 14
+	for i := 14; i < len(line); i++ {
+		if allCharactersAreDifferent(marker){
+			markerIndex = i
+			break;
+		}
+		marker = marker[1:] + string(line[i])
+	}
+	return fmt.Sprintf("Marker found at %d", markerIndex)
 }
