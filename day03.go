@@ -77,7 +77,7 @@ func (d *Day03) executePart2() string{
 		}
 		groupItems = append(groupItems, items)
 		if i % 3 == 2 {
-			for i, _ := range(items){
+			for i := range items {
 				if groupItems[0][i] && groupItems[1][i] && groupItems[2][i]{
 					//priority starts from 1, arrays start from 0
 					priorityScore += i+1
