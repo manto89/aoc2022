@@ -28,12 +28,51 @@ func (d *Day07) executePart1() string {
       fd.size = calculateDirSize(fd.children)
     }
   }
-  dirUnder100k := extractDirectoriesUnder100k(*workingDir)
+  dirUnder100k := extractDirectoriesBetweenSize(*workingDir, 0, 100000)
   sizeSum := 0
   for _, d := range(dirUnder100k){
     sizeSum += d.size
   }
   return fmt.Sprintf("Total size of directories under 100k: %d", sizeSum)
+
+}
+func (d *Day07) executePart2() string {
+	lines, err := common.ReadAllLines(d.inputPath)
+	if err != nil {
+        return fmt.Sprintf("open file error: %v", err)
+	}
+  workingDir, err := getDirectoriesFromLines(lines)
+  if err != nil{
+        return fmt.Sprintf("parse file error: %v", err)
+  }
+  //Navigate to root
+  for workingDir.parent != nil{
+    workingDir = workingDir.parent
+  }
+  totalSize := 0
+  //Calculate size of all directories
+  for _, fd := range(workingDir.children){
+    if fd.fileType == Directory{
+      fd.size = calculateDirSize(fd.children)
+    }
+    totalSize += fd.size
+  }
+  sizeNeeded := 30000000 - (70000000 - totalSize)
+  if sizeNeeded < 0 {
+    return fmt.Sprintf("the space needed is below 0. Total size: %d", totalSize)
+  }
+  dirs := extractDirectoriesBetweenSize(*workingDir, sizeNeeded, 99999999999)
+  size := 9999999999
+  for _, dir := range(dirs){
+    if dir.size < size {
+      size = dir.size
+    }
+  }
+
+
+  return fmt.Sprintf("The smallest dir size needed is: %d", size)
+
+
 
 }
 func getDirectoriesFromLines(lines []string) (*FD, error){
@@ -79,14 +118,14 @@ func getDirectoriesFromLines(lines []string) (*FD, error){
   return workingDir, nil
 }
 
-func extractDirectoriesUnder100k(fd FD) ([]FD) {
+func extractDirectoriesBetweenSize(fd FD, from int, to int) ([]FD) {
   var ret []FD
   for _, child := range(fd.children){
     if child.fileType == Directory{
-      if child.size < 100001 {
+      if child.size >= from && child.size <= to {
         ret = append(ret, *child)
       }
-      newDirs := extractDirectoriesUnder100k(*child)
+      newDirs := extractDirectoriesBetweenSize(*child, from, to)
       ret = append(ret, newDirs...)
     }
   }
@@ -158,6 +197,3 @@ func decodeLsOutput(line string, parent *FD) (*FD, error){
 }
 
 
-func (d *Day07) executePart2() string {
-	return "Not implemented"
-}
