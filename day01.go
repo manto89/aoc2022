@@ -59,7 +59,7 @@ func (d *Day01) executePart2() string {
 	ints, err := convertToIntAndSumBetweenEmptyLines(lines)
 
 	if err != nil {
-		return fmt.Sprintf("Unable to parse strings to ints %w", err)
+		return fmt.Sprintf("Unable to parse strings to ints %v", err)
 	}
 
 	sort.Ints(ints)
