@@ -14,12 +14,35 @@ func (d *Day07) executePart1() string {
 	if err != nil {
         return fmt.Sprintf("open file error: %v", err)
 	}
+  workingDir, err := getDirectoriesFromLines(lines)
+  if err != nil{
+        return fmt.Sprintf("parse file error: %v", err)
+  }
+  //Navigate to root
+  for workingDir.parent != nil{
+    workingDir = workingDir.parent
+  }
+  //Calculate size of all directories
+  for _, fd := range(workingDir.children){
+    if fd.fileType == Directory{
+      fd.size = calculateDirSize(fd.children)
+    }
+  }
+  dirUnder100k := extractDirectoriesUnder100k(*workingDir)
+  sizeSum := 0
+  for _, d := range(dirUnder100k){
+    sizeSum += d.size
+  }
+  return fmt.Sprintf("Total size of directories under 100k: %d", sizeSum)
+
+}
+func getDirectoriesFromLines(lines []string) (*FD, error){
   var workingDir *FD
 	for i, line := range(lines){
 		if string(line[0]) == "$"{
       command, destination, err := decodeCommand(line)
       if err != nil {
-        return fmt.Sprintf("error decoding line %d: %v", i, err)
+        return workingDir, fmt.Errorf("error decoding line %d: %v", i, err)
       }
       if command == "cd" {
         var newWorkingDir *FD
@@ -38,7 +61,7 @@ func (d *Day07) executePart1() string {
               }
             }
             if newWorkingDir.name == "" {
-              return fmt.Sprintf("error moving to directory %s, working directory name: %s , children: %v", destination, workingDir.name, workingDir.children)
+              return workingDir, fmt.Errorf("error moving to directory %s, working directory name: %s , children: %v", destination, workingDir.name, workingDir.children)
             }
           }
         }
@@ -48,26 +71,12 @@ func (d *Day07) executePart1() string {
 		} else {
       fd, err := decodeLsOutput(line, workingDir)
       if err != nil{
-        return fmt.Sprintf("error decoding line %d: %v", i, err)
+        return workingDir, fmt.Errorf("error decoding line %d: %v", i, err)
       }
       workingDir.children = append(workingDir.children, fd)
     }
   }
-  for workingDir.parent != nil{
-    workingDir = workingDir.parent
-  }
-  for _, fd := range(workingDir.children){
-    if fd.fileType == Directory{
-      fd.size = calculateDirSize(fd.children)
-    }
-  }
-  dirUnder100k := extractDirectoriesUnder100k(*workingDir)
-  sizeSum := 0
-  for _, d := range(dirUnder100k){
-    sizeSum += d.size
-  }
-  return fmt.Sprintf("Total size of directories under 100k: %d", sizeSum)
-
+  return workingDir, nil
 }
 
 func extractDirectoriesUnder100k(fd FD) ([]FD) {
